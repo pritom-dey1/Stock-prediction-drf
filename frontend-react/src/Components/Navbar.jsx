@@ -1,21 +1,64 @@
-import React from 'react'
+import React, { useContext } from 'react';
+import { Link } from 'react-router';
+import { AuthContext } from '../Provider/AuthProvider';
 
 const Navbar = () => {
-  return (
-    <div className='bg-[#ededf2] flex justify-between items-center p-4'>
-        <div>
-            <h2 className='text-[24px]  font-bold text-blue-800'>STOCK PREDICTION</h2>
-        </div>
-        <div className='flex gap-3'>
-            <button className='bg-blue-800 rounded-[5px] px-5 text-[20px] text-white py-1'>
-                LOGIN
-            </button>
-            <button className='bg-blue-800 rounded-[5px] px-5 text-[20px] text-white py-1'>
-                REGISTER
-            </button>
-        </div>
-    </div>
-  )
-}
+const { IsLogedIn, setIsLogedIn } = useContext(AuthContext);
 
-export default Navbar
+
+  const handleLogout = () => {
+   
+    setIsLogedIn(false);
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+  };
+
+  return (
+    <nav className="bg-[#ededf2] flex justify-between items-center p-4 shadow-md">
+      {/* Logo */}
+      <div>
+        <Link
+          to="/"
+          className="text-2xl font-bold text-blue-800 hover:text-blue-600 transition"
+        >
+          StockVision
+        </Link>
+      </div>
+
+      {/* Navigation Links */}
+      <div className="flex gap-3">
+        {IsLogedIn ? (
+        <>
+          <button
+            onClick={handleLogout}
+            className="bg-blue-800 rounded-md px-5 py-2 text-white font-semibold hover:bg-blue-700 transition"
+          >
+            Logout
+          </button>
+          <Link className="bg-blue-800 rounded-md px-5 py-2 text-white font-semibold hover:bg-blue-700 transition" to = "/dashboard">DASHBOARD</Link>
+        </>
+          
+          
+        ) : (
+          <>
+            <Link
+              to="/login"
+              className="bg-blue-800 rounded-md px-5 py-2 text-white font-semibold hover:bg-blue-700 transition"
+            >
+              Login
+            </Link>
+
+            <Link
+              to="/register"
+              className="bg-blue-800 rounded-md px-5 py-2 text-white font-semibold hover:bg-blue-700 transition"
+            >
+              Register
+            </Link>
+          </>
+        )}
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
